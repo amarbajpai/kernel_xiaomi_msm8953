@@ -39,6 +39,15 @@ config CFQ_GROUP_IOSCHED
 	---help---
 	  Enable group IO scheduling in CFQ.
 
+config IOSCHED_ANXIETY
+	tristate "Anxiety I/O scheduler"
+	default y
+	---help---
+	  The Anxiety I/O scheduler prioritizes latency over everything
+	  else. It uses a simple algorithm that selects from FIFO queues
+	  implemented as doubly linked lists and prioritizes reads over
+          writes.
+
 choice
 	prompt "Default I/O scheduler"
 	default DEFAULT_CFQ
@@ -54,6 +63,9 @@ choice
 
 	config DEFAULT_NOOP
 		bool "No-op"
+
+	config DEFAULT_ANXIETY
+                bool "Anxiety" if IOSCHED_ANXIETY=y
 
 endchoice
 
