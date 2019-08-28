@@ -238,29 +238,6 @@ static void mdss_mdp_kcal_update_pcc(struct kcal_lut_data *lut_data)
 	kfree(payload);
 }
 
-static void mdss_mdp_kcal_read_pcc(struct kcal_lut_data *lut_data)
-{
-	u32 copyback = 0;
-	struct mdp_pcc_cfg_data pcc_config;
-
-	memset(&pcc_config, 0, sizeof(struct mdp_pcc_cfg_data));
-
-	pcc_config.block = MDP_LOGICAL_BLOCK_DISP_0;
-	pcc_config.ops = MDP_PP_OPS_READ;
-
-	mdss_mdp_pcc_config(fb0_ctl->mfd, &pcc_config, &copyback);
-
-	/* LiveDisplay disables pcc when using default values and regs
-	 * are zeroed on pp resume, so throw these values out.
-	 */
-	if (!pcc_config.r.r && !pcc_config.g.g && !pcc_config.b.b)
-		return;
-
-	lut_data->red = (pcc_config.r.r & 0xffff) / PCC_ADJ;
-	lut_data->green = (pcc_config.g.g & 0xffff) / PCC_ADJ;
-	lut_data->blue = (pcc_config.b.b & 0xffff) / PCC_ADJ;
-}
-
 #ifdef CONFIG_KLAPSE
 static struct platform_device kcal_ctrl_device;
 
